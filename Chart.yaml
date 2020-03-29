@@ -1,12 +1,12 @@
 apiVersion: v1
-appVersion: "latest"
+appVersion: "1.0.1"
 description: mjpg-streamer is a command line application that copies JPEG frames from one or more input plugins to multiple output plugins. <Paste>
 name: mjpg-streamer
 version: 0.1.0
 home: https://github.com/matrix-org/synapse
 sources:
   - https://github.com/jacksonliam/mjpg-streamer
-  - https://hub.docker.com/r/jacksonliam/mjpg-streamer
+  - https://hub.docker.com/r/badsmoke/mjpg-streamer
 maintainers:
   - name: Gavin Mogan
     email: helm@gavinmogan.com

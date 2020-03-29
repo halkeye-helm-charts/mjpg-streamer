@@ -34,11 +34,14 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           #command: ["/bin/sh"]
           #args: ["-c", "sleep 99d"]
+          command: ["./mjpg_streamer"]
           args:
             - -i
             - "input_uvc.so -n -r {{ .Values.resolution }} -f {{ .Values.fps }}"
             - -o
             - "output_http.so -p 80 -w /usr/local/share/mjpg-streamer/www"
+          env:
+           - { name: "LD_LIBRARY_PATH", value: "/mjpg-streamer/mjpg-streamer-experimental" }
           ports:
             - name: http
               containerPort: 80
