@@ -16,6 +16,9 @@ spec:
         app.kubernetes.io/name: {{ include "mjpg-streamer.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      strategy:
+        type: Recreate
+        rollingUpdate: null
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -29,6 +32,13 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          #command: ["/bin/sh"]
+          #args: ["-c", "sleep 99d"]
+          args:
+            - -i
+            - "input_uvc.so -n -r {{ .Values.resolution }} -f {{ .Values.fps }}"
+            - -o
+            - "output_http.so -p 80 -w /usr/local/share/mjpg-streamer/www"
           ports:
             - name: http
               containerPort: 80
@@ -41,6 +51,13 @@ spec:
             httpGet:
               path: /
               port: http
+          securityContext:
+            # uses privileged to accses the raw device
+            # not sure which caps are needed otherwise
+            privileged: true
+          volumeMounts:
+            - mountPath: /dev/video0
+              name: video0
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -55,3 +72,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      volumes:
+        - name: video0
+          hostPath:
+            path: {{ .Values.device | quote }}
