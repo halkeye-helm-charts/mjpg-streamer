@@ -6,6 +6,9 @@ metadata:
 {{ include "mjpg-streamer.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+    rollingUpdate: null
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "mjpg-streamer.name" . }}
@@ -16,9 +19,6 @@ spec:
         app.kubernetes.io/name: {{ include "mjpg-streamer.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      strategy:
-        type: Recreate
-        rollingUpdate: null
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
