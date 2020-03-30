@@ -54,10 +54,6 @@ spec:
             httpGet:
               path: /
               port: http
-          securityContext:
-            # uses privileged to accses the raw device
-            # not sure which caps are needed otherwise
-            privileged: true
           volumeMounts:
             - mountPath: /dev/video0
               name: video0

@@ -23,7 +23,10 @@ serviceAccount:
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  # uses privileged to accses the raw device
+  # not sure which caps are needed otherwise
+  privileged: true
   # capabilities:
   #   drop:
   #   - ALL
